@@ -1,7 +1,7 @@
 """Blogly application."""
 
 from flask import Flask, request, redirect, render_template
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
@@ -17,6 +17,36 @@ def redirect_list_users():
     """Redirects to list_users. Fix later"""
 
     return redirect('/users')
+
+@app.route("/posts/<int:post_id>")
+def show_post(post_id):
+    """show the post"""
+
+    post = Post.query.get_or_404(post_id)
+    return render_template('post.html', post=post)
+
+@app.route("/posts/<int:post_id>/edit")
+def show_edit_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('edit_post.html', post=post)
+
+@app.route("/posts/<int:post_id>/edit", methods=['POST'])
+def edit_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    post.title = request.form['title'] or None
+    post.content = request.form['content'] or None
+
+    db.session.add(post)
+    db.session.commit()
+
+    return redirect('/')
+
+@app.route("/posts/<int:post_id>/delete", methods=['POST'])
+def delete_post(post_id):
+    Post.query.filter(Post.id == post_id).delete()
+
+    db.session.commit()
+    return redirect('/')   
 
 @app.route('/users')
 def list_users():
@@ -71,6 +101,27 @@ def edit_user(user_id):
     db.session.commit()
 
     return redirect('/users')
+
+@app.route('/users/<int:user_id>/posts/new')
+def show_new_post_form(user_id):
+    """show the new post form"""
+
+    user = User.query.get_or_404(user_id)
+    return render_template('new_post.html', user=user)
+
+@app.route('/users/<int:user_id>/posts/new', methods=['POST'])
+def create_post(user_id):
+
+    title = request.form['title'] or None
+    content = request.form['content'] or None
+    
+    new_post = Post(title=title, content=content, user_id=user_id)
+
+    db.session.add(new_post)
+    db.session.commit()
+
+    return redirect('/')
+
 
 @app.route('/users/<int:user_id>/delete', methods=['POST'])
 def delete_user(user_id):

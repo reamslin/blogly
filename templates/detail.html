@@ -9,4 +9,13 @@
 <form action='/users/{{user.id}}/delete' method=POST>
     <button type=submit class='btn btn-warning'>DELETE</button>
 </form>
+
+<h2>Posts</h2>
+<ul>
+    {% for post in user.posts %}
+        <li><a href='/posts/{{post.id}}'>{{post.title}}</a></li>
+    {% endfor %}
+</ul>
+<a class='btn btn-primary' href='/users/{{user.id}}/posts/new'>Add Post</a>
+
 {% endblock %}
