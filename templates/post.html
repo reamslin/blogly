@@ -9,6 +9,13 @@
     <br>
     <i>By {{post.user.first_name}} {{post.user.last_name}}</i>
 </p>
+
+<b>Tags: </b>
+
+{% for tag in post.tags %}
+<a class= 'badge badge-primary' href='/tags/{{tag.id}}'>{{tag.name}}</a>
+{% endfor %}
+<br>
 <a class='btn btn-secondary' href='/posts/{{post.id}}/edit'>EDIT</a>
 <form action='/posts/{{post.id}}/delete' method=POST>
     <button type=submit class='btn btn-warning'>DELETE</button>

@@ -3,7 +3,6 @@
 {% block title %}Users{% endblock %}
 
 {% block content %}
-<div class="container col-md-7 col-lg-6 col-xl-5 p-2 bg-light">
     <h1 class="display-5">Users</h1>
     <ul>
         {% for user in users %}
@@ -11,5 +10,4 @@
         {% endfor %}
     </ul>
     <a href='/users/new' class='btn btn-secondary'>Add User</a>
-</div>
 {% endblock %}
